@@ -1,6 +1,5 @@
 import numpy as np
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
 
 # -----------------------------
 # Helper functions
@@ -42,7 +41,7 @@ def vector(v, label, color):
     )
 
 # =====================================================
-# MAIN FIGURE FUNCTION
+# MAIN FIGURE FUNCTION (MODEL ONLY)
 # =====================================================
 def create_figure(h=None, a_s=None, beta=None, a=None):
     """
@@ -128,45 +127,47 @@ def create_figure(h=None, a_s=None, beta=None, a=None):
     arc_psi = angle_arc(sun, pv_normal, 0.65)
 
     # -----------------------------
-    # Create layout
+    # Create figure (NO SUBPLOTS)
     # -----------------------------
-    fig = make_subplots(
-        rows=1, cols=1,
-        column_widths=[0.62, 0.38],
-        specs=[[{"type": "scene"}, {"type": "domain"}]],
-        horizontal_spacing=0.05
-    )
+    fig = go.Figure()
 
-    # -----------------------------
-    # 3D model (left)
-    # -----------------------------
-    fig.add_trace(vector(sun, "Sun direction", "orange"), row=1, col=1)
-    fig.add_trace(vector(zenith, "Zenith", "blue"), row=1, col=1)
-    fig.add_trace(vector(pv_normal, "PV normal (south-facing)", "green"), row=1, col=1)
-    fig.add_trace(vector(ground_dir, "Ground reference", "gray"), row=1, col=1)
+    # Vectors
+    fig.add_trace(vector(sun, "Sun direction", "orange"))
+    fig.add_trace(vector(zenith, "Zenith", "blue"))
+    fig.add_trace(vector(pv_normal, "PV normal (south-facing)", "green"))
+    fig.add_trace(vector(ground_dir, "Ground reference", "gray"))
 
+    # PV module
     fig.add_trace(go.Mesh3d(
-        x=corners[:,0], y=corners[:,1], z=corners[:,2],
-        color="darkblue", opacity=0.6, name="PV module"
-    ), row=1, col=1)
+        x=corners[:,0],
+        y=corners[:,1],
+        z=corners[:,2],
+        color="darkblue",
+        opacity=0.6,
+        name="PV module"
+    ))
 
+    # Angle arcs
     fig.add_trace(go.Scatter3d(
         x=arc_h[:,0], y=arc_h[:,1], z=arc_h[:,2],
-        mode="lines", name="h – Sun elevation",
+        mode="lines",
+        name="h – Sun elevation",
         line=dict(color="red", width=4)
-    ), row=1, col=1)
+    ))
 
     fig.add_trace(go.Scatter3d(
         x=arc_psi_z[:,0], y=arc_psi_z[:,1], z=arc_psi_z[:,2],
-        mode="lines", name="ψz – Sun zenith",
+        mode="lines",
+        name="ψz – Sun zenith",
         line=dict(color="purple", width=4)
-    ), row=1, col=1)
+    ))
 
     fig.add_trace(go.Scatter3d(
         x=arc_psi[:,0], y=arc_psi[:,1], z=arc_psi[:,2],
-        mode="lines", name="ψ – Incidence angle",
+        mode="lines",
+        name="ψ – Incidence angle",
         line=dict(color="black", width=4)
-    ), row=1, col=1)
+    ))
 
     # Sun sphere
     phi, theta = np.mgrid[0:np.pi:25j, 0:2*np.pi:25j]
@@ -175,11 +176,15 @@ def create_figure(h=None, a_s=None, beta=None, a=None):
     sun_z = sun_center[2] + sun_radius * np.cos(phi)
 
     fig.add_trace(go.Surface(
-        x=sun_x, y=sun_y, z=sun_z,
+        x=sun_x,
+        y=sun_y,
+        z=sun_z,
         colorscale=[[0, "yellow"], [1, "orange"]],
-        showscale=False, name="Sun"
-    ), row=1, col=1)
+        showscale=False,
+        name="Sun"
+    ))
 
+    # Sun rays
     fig.add_trace(go.Scatter3d(
         x=[sun_center[0], 0],
         y=[sun_center[1], 0],
@@ -187,16 +192,19 @@ def create_figure(h=None, a_s=None, beta=None, a=None):
         mode="lines",
         line=dict(color="orange", width=2, dash="dot"),
         name="Sun rays"
-    ), row=1, col=1)
+    ))
 
     # Ground plane
     xx, yy = np.meshgrid(np.linspace(-1,1,10), np.linspace(-1,1,10))
     zz = np.zeros_like(xx)
     fig.add_trace(go.Surface(
-        x=xx, y=yy, z=zz,
-        opacity=0.4, showscale=False, name="Ground"
-    ), row=1, col=1)
-
+        x=xx,
+        y=yy,
+        z=zz,
+        opacity=0.4,
+        showscale=False,
+        name="Ground"
+    ))
 
     # -----------------------------
     # Layout styling
