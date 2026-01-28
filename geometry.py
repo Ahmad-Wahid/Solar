@@ -197,36 +197,6 @@ def create_figure(h=None, a_s=None, beta=None, a=None):
         opacity=0.4, showscale=False, name="Ground"
     ), row=1, col=1)
 
-    # -----------------------------
-    # Theory panel (right)
-    # -----------------------------
-    fig.add_trace(go.Table(
-        header=dict(
-            values=["Theoretical explanation (independent of 3D model)"],
-            fill_color="lightgray",
-            align="left",
-            font=dict(size=14)
-        ),
-        cells=dict(
-            values=[[
-                "<b>Solar Geometry – Theory</b><br><br>"
-                "<b>Day of year</b><br>n = 1 … 365<br><br>"
-                "<b>Declination</b><br>"
-                "δ = 23.45° · sin[360°/365 · (284 + n)]<br><br>"
-                "<b>Hour angle</b><br>"
-                "ω = 15° · (LST − 12)<br><br>"
-                "<b>Sun elevation</b><br>"
-                "sin h = sinφ sinδ + cosφ cosδ cosω<br><br>"
-                "<b>Sun zenith</b><br>"
-                "ψz = 90° − h<br><br>"
-                "<b>Incidence</b><br>"
-                "cos ψ = s · n"
-            ]],
-            align="left",
-            font=dict(size=12),
-            height=28
-        )
-    ), row=1, col=2)
 
     # -----------------------------
     # Layout styling
