@@ -131,7 +131,7 @@ def create_figure(h=None, a_s=None, beta=None, a=None):
     # Create layout
     # -----------------------------
     fig = make_subplots(
-        rows=1, cols=2,
+        rows=1, cols=1,
         column_widths=[0.62, 0.38],
         specs=[[{"type": "scene"}, {"type": "domain"}]],
         horizontal_spacing=0.05
